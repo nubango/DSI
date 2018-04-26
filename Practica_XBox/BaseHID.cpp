@@ -27,7 +27,7 @@ void BaseHID::Actualiza()
 					 // Actualizo Gestos de entrada genéricos (entradas)
 
 		// Detecta gestos genericos
-		wButtonsDown = (-wLastButtons)&(wButtons);
+		wButtonsDown = (~wLastButtons)&(wButtons);
 		wButtonsUp = (wLastButtons)&(~wButtons);
 
 		// Filtro Thumbs

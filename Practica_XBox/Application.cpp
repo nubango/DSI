@@ -61,31 +61,41 @@ void GeneraEfectos(HIDXBox * Control)
 		SetCursorPos(pt.x, pt.y);
 	}
 
-	// Eventos de Raton
-	if (Control->BD(XINPUT_GAMEPAD_LEFT_SHOULDER))
-		mouse_event(MOUSEEVENTF_LEFTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_LEFT_SHOULDER))
-		mouse_event(MOUSEEVENTF_LEFTUP, pt.x, pt.y, 0, NULL);
-	if (Control->BD(XINPUT_GAMEPAD_A))
-		mouse_event(MOUSEEVENTF_LEFTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_A))
-		mouse_event(MOUSEEVENTF_LEFTUP, pt.x, pt.y, 0, NULL);
-	if (Control->BD(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	// Eventos de Raton \\
+
+	// El RB actua como el boton derecho del raton
+	if (Control->BD(XINPUT_GAMEPAD_RIGHT_THUMB))
 		mouse_event(MOUSEEVENTF_RIGHTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_RIGHT_SHOULDER))
+	if (Control->BU(XINPUT_GAMEPAD_RIGHT_THUMB))
 		mouse_event(MOUSEEVENTF_RIGHTUP, pt.x, pt.y, 0, NULL);
-	if (Control->BD(XINPUT_GAMEPAD_B))
-		mouse_event(MOUSEEVENTF_RIGHTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_B))
-		mouse_event(MOUSEEVENTF_RIGHTUP, pt.x, pt.y, 0, NULL);
+
+	// El LB actua como el boton izquierdo del raton
+	if (Control->BD(XINPUT_GAMEPAD_LEFT_THUMB))
+		mouse_event(MOUSEEVENTF_LEFTDOWN, pt.x, pt.y, 0, NULL);
+	if (Control->BU(XINPUT_GAMEPAD_LEFT_THUMB))
+		mouse_event(MOUSEEVENTF_LEFTUP, pt.x, pt.y, 0, NULL);
+
+	// El LT actua como rueda de raton hacia abajo
 	if (Control->gLT() != 0)
-		mouse_event(MOUSEEVENTF_WHEEL, pt.x, pt.y, (DWORD)(40 * Control->gLT()), 0);
+		mouse_event(MOUSEEVENTF_WHEEL, pt.x, pt.y, (DWORD)(-40 * Control->gLT()), 0);
+
+	// El RT actua como rueda de raton hacia arriba
 	if (Control->gRT() != 0)
 		mouse_event(MOUSEEVENTF_WHEEL, pt.x, pt.y, (DWORD)(40 * Control->gRT()), 0);
 
-	// Eventos de teclado
+	// Eventos de teclado \\
+
+	// El boton back ESC (cierra la aplicacion)
 	if (Control->BD(XINPUT_GAMEPAD_BACK))
 		PostQuitMessage(0);
+
+	// El boton Start actua como Enter
+	if (Control->BD(XINPUT_GAMEPAD_START))
+		keybd_event(VK_RETURN, 0x0, 0, 0);
+	if (Control->BU(XINPUT_GAMEPAD_START))
+		keybd_event(VK_RETURN, 0x0, KEYEVENTF_KEYUP, 0);
+
+	// El DPAD actua como las flechas de direccion
 	if (Control->BD(XINPUT_GAMEPAD_DPAD_UP))
 		keybd_event(VK_UP, 0x0, 0, 0);
 	if (Control->BU(XINPUT_GAMEPAD_DPAD_UP))
@@ -103,15 +113,42 @@ void GeneraEfectos(HIDXBox * Control)
 	if (Control->BU(XINPUT_GAMEPAD_DPAD_RIGHT))
 		keybd_event(VK_RIGHT, 0x0, KEYEVENTF_KEYUP, 0);
 
-	// Si se ha pulsado algun boton
-	if (Control->BD(0xFFFF))
-		Control->sRR(1, 0.1);
+	// El boton B actua como la tecla FIN
+	if (Control->BD(XINPUT_GAMEPAD_B))
+		keybd_event(VK_END, 0x0, 0, 0);
+	if (Control->BU(XINPUT_GAMEPAD_B))
+		keybd_event(VK_END, 0x0, KEYEVENTF_KEYUP, 0);
 
-	// Gestiones de Ventana
+	// El boton X actua como la tecla INICIO
+	if (Control->BD(XINPUT_GAMEPAD_X))
+		keybd_event(VK_HOME, 0x0, 0, 0);
+	if (Control->BU(XINPUT_GAMEPAD_X))
+		keybd_event(VK_HOME, 0x0, KEYEVENTF_KEYUP, 0);
+
+	// El boton Y actua como AV PAG
+	if (Control->BD(XINPUT_GAMEPAD_Y))
+		keybd_event(VK_PRIOR, 0x0, 0, 0);
+	if (Control->BU(XINPUT_GAMEPAD_Y))
+		keybd_event(VK_PRIOR, 0x0, KEYEVENTF_KEYUP, 0);
+
+	// El boton A actua como RE PAG
+	if (Control->BD(XINPUT_GAMEPAD_A))
+		keybd_event(VK_NEXT, 0x0, 0, 0);
+	if (Control->BU(XINPUT_GAMEPAD_A))
+		keybd_event(VK_NEXT, 0x0, KEYEVENTF_KEYUP, 0);
+
+	// Si se ha pulsado algun boton vibra el motor izquierdo
+	if (Control->BD(0xFFFF))
+		Control->sLR(0.5, 0.1);
+
+	// Gestiones de Ventana \\
+
 	hWndAnt = hWnd;
 	hWnd = GetForegroundWindow();
-	if (Control->GRLJ()) // Gesto rotacion
+	// Gesto rotacion
+	if (Control->GRLJ())
 		ShowWindow(hWnd, SW_MINIMIZE);
+	// Si se cambia de ventana vibra el motor derecho
 	if (hWnd != hWndAnt)
-		Control->sLR(1, 0.2);
+		Control->sRR(0.5, 0.2);
 }

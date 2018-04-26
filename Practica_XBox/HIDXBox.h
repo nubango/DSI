@@ -2,7 +2,7 @@
 
 #include "BaseHID.h"
 #include <XInput.h>
-#pragma comment(lib, "xinput9_1_0.lib")
+#pragma comment(lib, "xinput9_1_0.lib")	
 
 #define INPUT_DEADZONE (0.05f * FLOAT(0x7FFF)) // Default to 24% of the +/- 32767 range
 
