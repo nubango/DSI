@@ -49,7 +49,7 @@ void GeneraEfectos(HIDXBox * Control)
 	if ((fabs(Control->gLJX()) > 0.05) | (fabs(Control->gLJY()) > 0.05))
 	{
 		pt.x += 20 * Control->gLJX();
-		pt.y += 20 * Control->gLJY();
+		pt.y -= 20 * Control->gLJY();
 		SetCursorPos(pt.x, pt.y);
 	}
 
@@ -64,15 +64,15 @@ void GeneraEfectos(HIDXBox * Control)
 	// Eventos de Raton \\
 
 	// El RB actua como el boton derecho del raton
-	if (Control->BD(XINPUT_GAMEPAD_RIGHT_THUMB))
+	if (Control->BD(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 		mouse_event(MOUSEEVENTF_RIGHTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_RIGHT_THUMB))
+	if (Control->BU(XINPUT_GAMEPAD_RIGHT_SHOULDER))
 		mouse_event(MOUSEEVENTF_RIGHTUP, pt.x, pt.y, 0, NULL);
 
 	// El LB actua como el boton izquierdo del raton
-	if (Control->BD(XINPUT_GAMEPAD_LEFT_THUMB))
+	if (Control->BD(XINPUT_GAMEPAD_LEFT_SHOULDER))
 		mouse_event(MOUSEEVENTF_LEFTDOWN, pt.x, pt.y, 0, NULL);
-	if (Control->BU(XINPUT_GAMEPAD_LEFT_THUMB))
+	if (Control->BU(XINPUT_GAMEPAD_LEFT_SHOULDER))
 		mouse_event(MOUSEEVENTF_LEFTUP, pt.x, pt.y, 0, NULL);
 
 	// El LT actua como rueda de raton hacia abajo
