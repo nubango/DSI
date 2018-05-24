@@ -50,9 +50,9 @@ void BaseHID::Actualiza()
 			else Ro = pp;
 			
 			//Actualizo tiempos de de feedback (Salida)
-			if (tLR>0)	tLR -= T; 
+			if (tLR>0)	tLR -= T/1000; 
 			else sLR(0.0, 0.0);
-			if (tRR>0)	tRR -= T; 
+			if (tRR>0)	tRR -= T/1000; 
 			else sRR(0.0, 0.0);
 
 			

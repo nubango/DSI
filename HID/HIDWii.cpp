@@ -10,19 +10,12 @@ bool HID::LeeMando()
 
 void HID::EscribeMando()
 {
-	if (usbHID->IsButtonPressed(2, 0x08)) {
-		if (!rumbling) {
-			setRumble(true);
-			timer = timeLeftRumble = 2;
-		}
-		else {
-			timeLeftRumble = 2;
-		}
-	}
-	if (timeLeftRumble <= 0)
-		setRumble(false);
-	else
-		timeLeftRumble--;
+	
+	if (tRR > 0 && !rumbling)
+		setRumble(true);
+	else if (rumbling && tRR <= 0)
+		setRumble(false);												
+
 }
 
 /*
@@ -136,4 +129,5 @@ void HID::setRumble(bool on)
 	outBuf[0] = 21;
 	outBuf[1] = on ? 0x01 : 0x00;
 	usbHID->write(outBuf, 2);
+	
 }
