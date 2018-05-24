@@ -16,8 +16,6 @@ private:
 
 	UsbHID* usbHID;
 	bool rumbling = false;
-	float timeLeftRumble = 0;
-	float timer;
 
 public:
 	HID(float t) :BaseHID(t) { usbHID = new UsbHID(); open(); }
