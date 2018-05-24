@@ -10,7 +10,19 @@ bool HID::LeeMando()
 
 void HID::EscribeMando()
 {
-
+	if (usbHID->IsButtonPressed(2, 0x08)) {
+		if (!rumbling) {
+			setRumble(true);
+			timer = timeLeftRumble = 2;
+		}
+		else {
+			timeLeftRumble = 2;
+		}
+	}
+	if (timeLeftRumble <= 0)
+		setRumble(false);
+	else
+		timeLeftRumble--;
 }
 
 /*
@@ -23,12 +35,13 @@ void HID::EscribeMando()
 #define XINPUT_GAMEPAD_LEFT_THUMB       0x0040
 #define XINPUT_GAMEPAD_RIGHT_THUMB      0x0080
 #define XINPUT_GAMEPAD_LEFT_SHOULDER    0x0100
-#define XINPUT_GAMEPAD_RIGHT_SHOULDER   0x0200
+#define XINPUT_GAMEPAD_RIGHT_SHOULDER   0x0200			
 #define XINPUT_GAMEPAD_A                0x1000
 #define XINPUT_GAMEPAD_B                0x2000
 #define XINPUT_GAMEPAD_X                0x4000
 #define XINPUT_GAMEPAD_Y                0x8000
 */
+
 
 void HID::Mando2HID()
 {
@@ -55,7 +68,7 @@ void HID::Mando2HID()
 
 	//Normalizamos Joys
 	fThumbLX = (float)(usbHID->getInputByte(3) - 0x80) / 25.0;  // +g=24/127 [-1.0,1.0]
-	fThumbLY = -(float)(usbHID->getInputByte(4) - 0x80) / 25.0; //[-1.0,1.0]
+	fThumbLY = -(float)(usbHID->getInputByte(4) - 0x80) / 25.0; //[-1.0,1.0]	
 }
 
 void HID::Calibra()
@@ -110,20 +123,17 @@ void HID::setRumble(bool on)
 	if (!usbHID->isConnected())
 		return;
 
-	if (Internal.bRumble == on)
+	if (rumbling == on)
 		return;
 
-	Internal.bRumble = on;
+	rumbling = on;
 
-	if (usbHID->isPlayingAudio())
-		return;
-
-	BYTE buff[REPORT_LENGTH] = { 0 };
+	BYTE buff[2] = { 0 };
 	unsigned char *outBuf = usbHID->getOutputByteBuffer();
 
 	usbHID->clearOutputByteBuffer();
 
-	outBuf[0] = OUT_STATUS;
+	outBuf[0] = 21;
 	outBuf[1] = on ? 0x01 : 0x00;
 	usbHID->write(outBuf, 2);
 }
